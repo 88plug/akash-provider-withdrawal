@@ -39,16 +39,6 @@ docker run -it \
 ```
 Replace replace_with_key_pem_pass with the password for your key.pem file and yourprovider.com with your provider's domain name.
 
-## 🛠️ Building from Source
-
-To build the Akash Provider Withdrawal tool from source, follow these steps:
-
-1. Clone the repository: `git clone https://github.com/88plug/akash-provider-withdrawal.git`
-2. Navigate to the cloned directory: `cd akash-provider-withdrawal`
-3. Build the Docker image: `docker build -t akash-provider-withdrawal .`
-
-Now, you can run the tool using the `docker run` command mentioned in the Usage section.
-
 ## 🌍 Environment Variables
 
 During runtime, you can set several environment variables to configure the behavior of the Akash Provider Withdrawal tool. These variables allow you to customize the tool's operation to suit your needs. Add them with --env to the docker run command in Usage section.
@@ -60,3 +50,14 @@ During runtime, you can set several environment variables to configure the behav
 - `MODE`: Specify the mode of operation. The default value is `block`. Optional
 - `FEE`: Specify the fee (in UAKT) to use for each payout. If the fee is too low, you may encounter errors. Optional
 - `DELAY`: Specify the delay (in seconds) between each payout. Optional
+
+## 🛠️ Building from Source
+
+To build the Akash Provider Withdrawal tool from source, follow these steps:
+
+1. Clone the repository: `git clone https://github.com/88plug/akash-provider-withdrawal.git`
+2. Navigate to the cloned directory: `cd akash-provider-withdrawal`
+3. Build the Docker image: `docker build -t akash-provider-withdrawal .`
+
+Now, you can run the tool using the `docker run` command mentioned in the Usage section.
+
