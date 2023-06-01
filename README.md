@@ -39,6 +39,13 @@ docker run -it \
 ```
 Replace replace_with_key_pem_pass with the password for your key.pem file and yourprovider.com with your provider's domain name.
 
+*If you can't find your key.pem or password - you can get it from your running provider pod and save it locally!
+
+```
+kubectl cp akash-services/akash-provider-0:/boot-keys/key.txt ./key.pem
+kubectl cp akash-services/akash-provider-0:/boot-keys/key-pass.txt ./key-pass.txt
+```
+
 ## 🌍 Environment Variables
 
 During runtime, you can set several environment variables to configure the behavior of the Akash Provider Withdrawal tool. These variables allow you to customize the tool's operation to suit your needs. Add them with --env to the docker run command in Usage section.
