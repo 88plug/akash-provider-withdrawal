@@ -25,7 +25,7 @@ ENV PASS=
 ENV PROVIDER=
 # Provider domain name
 ENV MODE=block
-ENV FEE=6969
+ENV FEE=69
 # UAKT Fee to use for each payout. You will likely get errors if too low.
 ENV ONLY_NEGATIVE_BALANCES=true
 # Change to true to withdrawl all leases including positive balances.
