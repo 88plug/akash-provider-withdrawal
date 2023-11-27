@@ -35,6 +35,7 @@ docker run -it \
   --env PASS=replace_with_key_pem_pass \
   --env ONLY_NEGATIVE_BALANCES=false \
   --env PROVIDER=yourprovider.com \
+  --env FEE=4000
   cryptoandcoffee/akash-provider-withdrawal
 ```
 Replace replace_with_key_pem_pass with the password for your key.pem file and yourprovider.com with your provider's domain name.
