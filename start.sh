@@ -16,7 +16,7 @@ fi
 export AKASH_CHAIN_ID=akashnet-2
 export AKASH_NODE=$NODE
 export AKASH_KEYRING_BACKEND=os
-export AKASH_VERSION=0.22.6
+export AKASH_VERSION=0.32.3
 export AKASH_NET=https://raw.githubusercontent.com/ovrclk/net/master/mainnet
 export AKASH_KEY_NAME=default
 export AKASH_SECRET=$PASS
