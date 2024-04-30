@@ -7,6 +7,15 @@ WORKDIR /app
 # Install git
 RUN apt-get update && apt-get install -y git jq dnsutils bsdmainutils bc unzip
 
+#Install Akash and setup wallet
+RUN curl -sSfL https://raw.githubusercontent.com/akash-network/node/master/install.sh | sh
+RUN cp bin/akash /usr/local/bin
+RUN rm -rf bin/
+RUN curl -sfL https://raw.githubusercontent.com/akash-network/provider/main/install.sh | bash
+RUN cp bin/provider-services /usr/local/bin
+RUN rm -rf bin/
+RUN echo "Akash Node     : $(akash version)\nAkash Provider : $(provider-services version)"
+
 # Clone the repository
 RUN curl -sSfL https://raw.githubusercontent.com/akash-network/node/master/install.sh | sh
 RUN cp bin/akash /usr/local/bin/
