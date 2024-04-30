@@ -54,22 +54,32 @@ akash query market lease list --node $NODE \
       echo "INFO: $owner/$dseq/$gseq/$oseq balance remaining $REMAINING"
 
 
-if [[ $ONLY_NEGATIVE_BALANCES == "true" ]]; then
+if [[ $ONLY_NEGATIVE_BALANCES == "true" && $CLOSE_ALL == "false" ]]; then
 
       if (( $(echo "$REMAINING < 0" | bc -l &> /dev/null) )); then
-
+echo "Withdrawing negative balances only."
         ( sleep 2s; cat key-pass.txt; cat key-pass.txt ) | akash tx market lease withdraw --node $NODE --provider $PROVIDER --owner $owner --dseq $dseq --oseq $oseq --gseq $gseq --fees="${FEE}"uakt --gas=auto --gas-adjustment=1.1 -y --from $PROVIDER -b $MODE
 
         sleep $DELAY
 
-	fi
-else
-
+        fi
+elif [[ $ONLY_NEGATIVE_BALANCES == "false" && $CLOSE_ALL == "false" ]]; then
+echo "Witdrawing all balances"
         ( sleep 2s; cat key-pass.txt; cat key-pass.txt ) | akash tx market lease withdraw --node $NODE --provider $PROVIDER --owner $owner --dseq $dseq --oseq $oseq --gseq $gseq --fees="${FEE}"uakt --gas=auto --gas-adjustment=1.1 -y --from $PROVIDER -b $MODE
-	sleep $DELAY
+        sleep $DELAY
 
+elif [[ $CLOSE_ALL == "true" ]]; then
+echo "Closing all bids"
+        ( sleep 2s; cat key-pass.txt; cat key-pass.txt ) | akash tx market bid close --node $NODE --provider $PROVIDER --owner $owner --dseq $dseq --oseq $oseq --gseq $gseq --fees="${FEE}"uakt --gas=auto --gas-adjustment=1.1 -y --from $PROVIDER -b $MODE
+        sleep $DELAY
+        #( sleep 2s; cat key-pass.txt; cat key-pass.txt ) | akash tx deployment close --node $NODE --provider $PROVIDER --owner $owner --dseq $dseq --oseq $oseq --gseq $gseq --fees="${FEE}"uakt --gas=auto --gas-adjustment=1.1 -y --from $PROVIDER -b $MODE
+        #sleep $DELAY
+        #( sleep 2s; cat key-pass.txt; cat key-pass.txt ) | akash tx market lease withdraw --node $NODE --provider $PROVIDER --owner $owner --dseq $dseq --oseq $oseq --gseq $gseq --fees="${FEE}"uakt --gas=auto --gas-adjustment=1.1 -y --from $PROVIDER -b $MODE
+
+
+else
+echo "ERROR"
 fi
-
 
 done
 
