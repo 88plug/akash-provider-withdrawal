@@ -31,6 +31,8 @@ ENV ONLY_NEGATIVE_BALANCES=true
 # Change to true to withdrawl all leases including positive balances.
 ENV DELAY=15
 # Delay between each payout
+ENV CLOSE_ALL=false
+# Close all bids (close all deployments)
 
 # Set the start script as the entrypoint
 ENTRYPOINT ["bash", "/app/start.sh"]
