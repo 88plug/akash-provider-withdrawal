@@ -1,3 +1,5 @@
+#kubectl apply -f withdrawal.yaml
+
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -16,6 +18,10 @@ rules:
 - apiGroups: [""]
   resources: ["pods/exec"]
   verbs: ["create"]
+#Needed only for the set ENV on the provider at start to disable withdraw
+- apiGroups: ["apps"]
+  resources: ["statefulsets"]
+  verbs: ["get", "list", "watch", "update", "patch"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -49,24 +55,37 @@ spec:
       serviceAccountName: akash-provider-withdrawal-sa
       containers:
       - name: akash-provider-withdrawal
-        image: cryptoandcoffee/akash-provider-withdrawal
+        image: cryptoandcoffee/akash-provider-withdrawal:5
         command: ["/bin/bash", "-c"]
         args:
           - curl -sLO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl" &&
             chmod +x ./kubectl &&
             mv ./kubectl /usr/local/bin/kubectl &&
-            kubectl exec -n akash-services akash-provider-0 -- cat /boot-keys/key.txt > /app/key.pem &&
-            export PASS=$(kubectl exec -n akash-services akash-provider-0 -- cat /boot-keys/key-pass.txt) &&
+            kubectl exec -n akash-services akash-provider-0 -- cat /boot-keys/key.txt > /app/key.pem 2>/dev/null &&
+            export PASS=$(kubectl exec -n akash-services akash-provider-0 -- cat /boot-keys/key-pass.txt 2>/dev/null) &&
             export PROVIDER=$(kubectl get pod akash-provider-0 -n akash-services -o jsonpath='{.spec.containers[0].env[?(@.name=="AKASH_CLUSTER_PUBLIC_HOSTNAME")].value}') &&
+            kubectl set env statefulset/akash-provider -n akash-services AKASH_LEASE_FUNDS_MONITOR_INTERVAL=$AKASH_LEASE_FUNDS_MONITOR_INTERVAL AKASH_WITHDRAWAL_PERIOD=$AKASH_WITHDRAWAL_PERIOD AKASH_MINIMUM_BALANCE=$AKASH_MINIMUM_BALANCE > /dev/null 2>&1 &&
             /app/start.sh;
         env:
         - name: ONLY_NEGATIVE_BALANCES
           value: "true"
+        - name: CLOSE_ALL
+          value: "false"
         - name: FEE
-          value: "4000"
+          value: "69"
         - name: NODE
           value: "https://akash-rpc.global.ssl.fastly.net:443"
         - name: MODE
           value: "block"
         - name: DELAY
-          value: "15"
+          value: "12"
+        #12 seconds between tx operations
+        - name: DELAY_LOOP
+          value: "60"
+        #1 minutes by default
+        - name: AKASH_WITHDRAWAL_PERIOD
+          value: "0s"
+        - name: AKASH_MINIMUM_BALANCE
+          value: "18446744073709551615"
+        - name: AKASH_LEASE_FUNDS_MONITOR_INTERVAL
+          value: "24h"
